@@ -7,7 +7,9 @@
     "rootDir": "./src",
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@configent/sdk/*": ["../../packages/sdk/src/*"],
+      "@configent/sdk": ["../../packages/sdk/src/index.ts"]
     },
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,

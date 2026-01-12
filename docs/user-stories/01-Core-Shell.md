@@ -45,11 +45,11 @@
 
 ### Acceptance Criteria
 
-- [ ] `VaultService` exists in NestJS.
-- [ ] Method `encrypt(text: string): string` returns `iv:ciphertext` (Base64).
-- [ ] Method `decrypt(ciphertext: string): string` restores original text.
-- [ ] Encryption Key is derived from a Master Password (or fixed Env var for MVP Step 1).
-- [ ] Unit Test verifies `decrypt(encrypt(x)) === x`.
+- [x] `VaultService` exists in NestJS.
+- [x] Method `encrypt(text: string): string` returns `iv:ciphertext` (Base64).
+- [x] Method `decrypt(ciphertext: string): string` restores original text.
+- [x] Encryption Key is derived from a Master Password (or fixed Env var for MVP Step 1).
+- [x] Unit Test verifies `decrypt(encrypt(x)) === x`.
 
 ---
 

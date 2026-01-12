@@ -12,6 +12,11 @@ const config = {
       },
     ],
   },
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/$1",
+    "^@configent/sdk/(.*)$": "<rootDir>/../../../packages/sdk/src/$1",
+    "^@configent/sdk$": "<rootDir>/../../../packages/sdk/src/index.ts",
+  },
   collectCoverageFrom: ["**/*.(t|j)s", "!**/*.spec.ts"],
   coverageDirectory: "../coverage",
   testEnvironment: "node",
