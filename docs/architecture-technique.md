@@ -114,7 +114,11 @@ packages:
 
 ### 3.1 Règles Fondamentales
 
-> [!CAUTION] > **Pureté du Domaine (CRITIQUE)** : Les entités dans `domain/` doivent être des **POJOs purs**. Aucune annotation (`@Entity()`, `@Column()`) n'est autorisée. La configuration de persistance se fait uniquement via Drizzle schemas dans `infrastructure/`.
+> [!CAUTION]
+> **Pureté du Domaine (CRITIQUE)** : Les entités dans `domain/` doivent être des **POJOs purs**. Aucune annotation (`@Entity()`, `@Column()`) n'est autorisée. La configuration de persistance se fait uniquement via Drizzle schemas dans `infrastructure/`.
+
+> [!IMPORTANT]
+> **Pattern Use Case** : Pour la logique applicative, privilégier strictement le pattern **Use Case** (une classe par action métier, ex: `CreateSecretUseCase`) plutôt que des "Services" génériques (`VaultService`). Cela favorise SRP (Single Responsibility Principle) et la testabilité.
 
 ### 3.2 Structure par Module
 
@@ -402,10 +406,7 @@ interface PluginMessage {
   params: unknown[];
 }
 
-export const usePluginComms = (
-  pluginId: string,
-  iframeRef: React.RefObject<HTMLIFrameElement>
-) => {
+export const usePluginComms = (pluginId: string, iframeRef: React.RefObject<HTMLIFrameElement>) => {
   const handleMessage = useCallback(
     (event: MessageEvent<PluginMessage>) => {
       // Validate origin matches plugin's expected origin
@@ -508,11 +509,7 @@ export interface IPluginRPC {
     register(cron: string, handlerId: string): Promise<void>;
   };
   mcp: {
-    call<T>(
-      server: string,
-      method: string,
-      params?: Record<string, unknown>
-    ): Promise<T>;
+    call<T>(server: string, method: string, params?: Record<string, unknown>): Promise<T>;
   };
 }
 
@@ -568,9 +565,7 @@ export const pluginInstall = sqliteTable("plugin_install", {
     .$type<string[]>()
     .notNull()
     .default([]),
-  config: text("config", { mode: "json" })
-    .$type<Record<string, unknown>>()
-    .default({}),
+  config: text("config", { mode: "json" }).$type<Record<string, unknown>>().default({}),
   installedAt: integer("installed_at", { mode: "timestamp" }).notNull(),
   lastStartedAt: integer("last_started_at", { mode: "timestamp" }),
 });
@@ -715,10 +710,7 @@ flowchart TB
 export const I_SANDBOX_SERVICE = Symbol("ISandboxService");
 
 export interface ISandboxService {
-  createContext(
-    pluginId: string,
-    permissions: string[]
-  ): Promise<SandboxContext>;
+  createContext(pluginId: string, permissions: string[]): Promise<SandboxContext>;
   executeCode(contextId: string, code: string): Promise<unknown>;
   disposeContext(contextId: string): Promise<void>;
 }
@@ -735,20 +727,14 @@ export interface SandboxContext {
 // apps/host-backend/src/modules/sandbox/infrastructure/adapters/isolated-vm.adapter.ts
 import ivm from "isolated-vm";
 import { Injectable } from "@nestjs/common";
-import {
-  ISandboxService,
-  SandboxContext,
-} from "../../domain/ports/sandbox.port";
+import { ISandboxService, SandboxContext } from "../../domain/ports/sandbox.port";
 
 @Injectable()
 export class IsolatedVmAdapter implements ISandboxService {
   private readonly isolates = new Map<string, ivm.Isolate>();
   private readonly contexts = new Map<string, SandboxContext>();
 
-  async createContext(
-    pluginId: string,
-    permissions: string[]
-  ): Promise<SandboxContext> {
+  async createContext(pluginId: string, permissions: string[]): Promise<SandboxContext> {
     const isolate = new ivm.Isolate({ memoryLimit: 128 });
     const context = await isolate.createContext();
 
@@ -791,9 +777,7 @@ export class IsolatedVmAdapter implements ISandboxService {
     }
   }
 
-  private async buildRpcObject(
-    permissions: string[]
-  ): Promise<Record<string, unknown>> {
+  private async buildRpcObject(permissions: string[]): Promise<Record<string, unknown>> {
     // Build RPC stubs based on granted permissions
     // Only inject methods that the plugin has permission for
     return {};
@@ -822,8 +806,7 @@ export class Aes256GcmAdapter implements ICryptoAdapter {
 
   constructor() {
     // Derived from Master Password or ENV var (MVP)
-    const masterKey =
-      process.env.CONFIGENT_MASTER_KEY || "default-dev-key-change-me!";
+    const masterKey = process.env.CONFIGENT_MASTER_KEY || "default-dev-key-change-me!";
     this.key = crypto.scryptSync(masterKey, "configent-salt", 32);
   }
 
@@ -843,11 +826,7 @@ export class Aes256GcmAdapter implements ICryptoAdapter {
 
   decrypt(ciphertext: string, iv: string): string {
     const [encrypted, authTag] = ciphertext.split(":");
-    const decipher = crypto.createDecipheriv(
-      this.algorithm,
-      this.key,
-      Buffer.from(iv, "base64")
-    );
+    const decipher = crypto.createDecipheriv(this.algorithm, this.key, Buffer.from(iv, "base64"));
     decipher.setAuthTag(Buffer.from(authTag, "base64"));
 
     let decrypted = decipher.update(encrypted, "base64", "utf8");
@@ -894,19 +873,12 @@ export class Aes256GcmAdapter implements ICryptoAdapter {
 // Signature des méthodes RPC
 interface RPCMethods {
   "vault.getSecret": (key: string) => Promise<string>;
-  "network.fetch": (
-    url: string,
-    options?: FetchOptions
-  ) => Promise<FetchResponse>;
+  "network.fetch": (url: string, options?: FetchOptions) => Promise<FetchResponse>;
   "store.get": (key: string) => Promise<unknown>;
   "store.set": (key: string, value: unknown) => Promise<void>;
   "notify.send": (level: string, message: string) => Promise<void>;
   "scheduler.register": (cron: string, handlerId: string) => Promise<void>;
-  "mcp.call": (
-    server: string,
-    method: string,
-    params?: object
-  ) => Promise<unknown>;
+  "mcp.call": (server: string, method: string, params?: object) => Promise<unknown>;
 }
 
 // Format des messages
@@ -990,11 +962,9 @@ const moderator: IPluginLifecycle = {
 
     try {
       // 1. Pull all pending comments via MCP
-      const comments = await rpc.mcp.call<IComment[]>(
-        "wordpress",
-        "list_comments",
-        { status: "pending" }
-      );
+      const comments = await rpc.mcp.call<IComment[]>("wordpress", "list_comments", {
+        status: "pending",
+      });
 
       if (comments.length === 0) return;
 
@@ -1012,10 +982,7 @@ const moderator: IPluginLifecycle = {
       }
 
       if (toxicComments.length > 0) {
-        await rpc.notify.send(
-          "warn",
-          `${toxicComments.length} toxic comment(s) removed`
-        );
+        await rpc.notify.send("warn", `${toxicComments.length} toxic comment(s) removed`);
       }
     } catch (error) {
       await rpc.notify.send("error", `Moderation failed: ${error.message}`);
@@ -1032,9 +999,7 @@ const moderator: IPluginLifecycle = {
  * - System prompt sent once (lower cost)
  * - Consistent moderation criteria across batch
  */
-async function analyzeBatch(
-  comments: IComment[]
-): Promise<IModerationResult[]> {
+async function analyzeBatch(comments: IComment[]): Promise<IModerationResult[]> {
   // MVP fallback: Simple keyword match if no LLM key
   const apiKey = await rpc.vault.getSecret("OPENAI_API_KEY").catch(() => null);
 
@@ -1057,28 +1022,25 @@ ${comments.map((c, i) => `[${c.id}]: "${c.content}"`).join("\n")}
 
 Respond ONLY with the JSON array, no other text.`;
 
-  const response = await rpc.network.fetch(
-    "https://api.openai.com/v1/chat/completions",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are a content moderation assistant. Analyze comments for toxicity, spam, harassment, or inappropriate content.",
-          },
-          { role: "user", content: prompt },
-        ],
-        temperature: 0,
-      }),
-    }
-  );
+  const response = await rpc.network.fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a content moderation assistant. Analyze comments for toxicity, spam, harassment, or inappropriate content.",
+        },
+        { role: "user", content: prompt },
+      ],
+      temperature: 0,
+    }),
+  });
 
   const data = await response.json();
   const content = data.choices[0].message.content;
@@ -1225,29 +1187,20 @@ export interface IAuthService {
 
 ```typescript
 // apps/host-backend/src/modules/auth/infrastructure/guards/jwt-auth.guard.ts
-import {
-  Injectable,
-  CanActivate,
-  ExecutionContext,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from "@nestjs/common";
 import { Inject } from "@nestjs/common";
 import { I_AUTH_SERVICE, IAuthService } from "../../domain/ports/auth.port";
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor(
-    @Inject(I_AUTH_SERVICE) private readonly authService: IAuthService
-  ) {}
+  constructor(@Inject(I_AUTH_SERVICE) private readonly authService: IAuthService) {}
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
     const authHeader = request.headers.authorization;
 
     if (!authHeader?.startsWith("Bearer ")) {
-      throw new UnauthorizedException(
-        "Missing or invalid Authorization header"
-      );
+      throw new UnauthorizedException("Missing or invalid Authorization header");
     }
 
     const token = authHeader.substring(7);
@@ -1265,18 +1218,9 @@ export class JwtAuthGuard implements CanActivate {
 
 ```typescript
 // apps/host-backend/src/modules/auth/infrastructure/web/auth.controller.ts
-import {
-  Controller,
-  Post,
-  Body,
-  UnauthorizedException,
-  Inject,
-} from "@nestjs/common";
+import { Controller, Post, Body, UnauthorizedException, Inject } from "@nestjs/common";
 import { I_AUTH_SERVICE, IAuthService } from "../../domain/ports/auth.port";
-import {
-  I_CONFIG_REPOSITORY,
-  IConfigRepository,
-} from "../../../config/domain/ports/config.port";
+import { I_CONFIG_REPOSITORY, IConfigRepository } from "../../../config/domain/ports/config.port";
 
 class UnlockDto {
   password: string;
@@ -1411,11 +1355,7 @@ export interface IMcpClientManager {
   /**
    * Execute an MCP tool call on behalf of a plugin
    */
-  callTool<T>(
-    serverName: string,
-    toolName: string,
-    params: Record<string, unknown>
-  ): Promise<T>;
+  callTool<T>(serverName: string, toolName: string, params: Record<string, unknown>): Promise<T>;
 
   /**
    * List available MCP servers (for UI)
@@ -1557,10 +1497,7 @@ export const I_PLUGIN_UPDATER = Symbol("IPluginUpdater");
 export interface IPluginUpdater {
   checkForUpdate(pluginId: string): Promise<IUpdateInfo | null>;
   updatePlugin(pluginId: string, targetVersion: string): Promise<IUpdateResult>;
-  rollbackPlugin(
-    pluginId: string,
-    targetVersion: string
-  ): Promise<IUpdateResult>;
+  rollbackPlugin(pluginId: string, targetVersion: string): Promise<IUpdateResult>;
   listVersions(pluginId: string): Promise<IPluginVersionInfo[]>;
   purgeOldVersions(pluginId: string, keepCount: number): Promise<number>;
 }
@@ -1813,8 +1750,7 @@ export const createMockRpc = (): IPluginRPC => ({
     send: async (level, message) => console.log(`[${level}] ${message}`),
   },
   scheduler: {
-    register: async (cron, handlerId) =>
-      console.log(`Registered: ${handlerId} @ ${cron}`),
+    register: async (cron, handlerId) => console.log(`Registered: ${handlerId} @ ${cron}`),
   },
   network: {
     fetch: async () => new Response(JSON.stringify({ mock: true })),

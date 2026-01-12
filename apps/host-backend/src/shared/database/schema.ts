@@ -1,4 +1,5 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+export * from "../../modules/vault/infrastructure/persistence/secret.schema";
 
 // Singleton Configuration
 export const config = sqliteTable("config", {

@@ -11,7 +11,7 @@ This index lists all User Stories for the Configent Phase 1 MVP, grouped by Epic
 | :--------- | :------------------------------------- | :----- |
 | **US-101** | **Monorepo Scaffolding**               | `DONE` |
 | **US-102** | **SQLite Database & Migration System** | `DONE` |
-| **US-103** | **Vault Service (Encryption)**         | `TODO` |
+| **US-103** | **Vault Service (Encryption)**         | `DONE` |
 | **US-104** | **Sandbox Engine (isolated-vm)**       | `TODO` |
 | **US-105** | **Secure RPC Bridge (Host Side)**      | `TODO` |
 
