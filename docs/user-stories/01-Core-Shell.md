@@ -77,7 +77,7 @@
 
 ### Acceptance Criteria
 
-- [ ] Mechanism to inject `global.rpc` into the Sandbox.
-- [ ] `SandboxService` can receive a call from inside the JS code.
-- [ ] Arguments are correctly marshalled (Strings/JSON passed safely).
-- [ ] Integration Test: Host defines `add(a,b)` -> Sandbox calls `rpc.add(1,2)` -> Host returns `3`.
+- [x] Mechanism to inject `global.rpc` into the Sandbox.
+- [x] `SandboxService` can receive a call from inside the JS code.
+- [x] Arguments are correctly marshalled (Strings/JSON passed safely).
+- [x] Integration Test: Host defines `add(a,b)` -> Sandbox calls `rpc.add(1,2)` -> Host returns `3`.

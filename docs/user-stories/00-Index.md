@@ -13,7 +13,7 @@ This index lists all User Stories for the Configent Phase 1 MVP, grouped by Epic
 | **US-102** | **SQLite Database & Migration System** | `DONE` |
 | **US-103** | **Vault Service (Encryption)**         | `DONE` |
 | **US-104** | **Sandbox Engine (isolated-vm)**       | `DONE` |
-| **US-105** | **Secure RPC Bridge (Host Side)**      | `TODO` |
+| **US-105** | **Secure RPC Bridge (Host Side)**      | `DONE` |
 
 ## [EPIC-02] Plugin System Management
 
