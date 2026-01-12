@@ -6,7 +6,7 @@ import * as crypto from "crypto";
 @Injectable()
 export class NodeCryptoAdapter implements ICryptoPort, OnModuleInit {
   private readonly algorithm = "aes-256-gcm";
-  private masterKey: Buffer;
+  private masterKey!: Buffer;
 
   constructor(private readonly configService: ConfigService) {}
 
