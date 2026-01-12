@@ -4,6 +4,7 @@ import { ICryptoPort, I_CRYPTO_PORT } from "../../domain/ports/crypto.port";
 import { CreateSecretDto } from "../dtos/create-secret.dto";
 import { SecretEntity } from "../../domain/entities/secret.entity";
 import { SecretScope } from "../../domain/vault.types";
+import { SecretAlreadyExistsException } from "../../domain/exceptions/secret.exception";
 
 @Injectable()
 export class CreateSecretUseCase {
@@ -12,7 +13,12 @@ export class CreateSecretUseCase {
     @Inject(I_CRYPTO_PORT) private readonly cryptoPort: ICryptoPort
   ) {}
 
-  async execute(dto: CreateSecretDto): Promise<void> {
+  async execute(dto: CreateSecretDto): Promise<SecretEntity> {
+    const existing = await this.secretRepository.findByKey(dto.key);
+    if (existing) {
+      throw new SecretAlreadyExistsException(dto.key);
+    }
+
     const { encrypted, iv } = this.cryptoPort.encrypt(dto.value);
     
     const secret = new SecretEntity(
@@ -24,5 +30,6 @@ export class CreateSecretUseCase {
     );
 
     await this.secretRepository.save(secret);
+    return secret;
   }
 }

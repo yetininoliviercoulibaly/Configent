@@ -1,10 +1,27 @@
+import { Test, TestingModule } from "@nestjs/testing";
 import { NodeCryptoAdapter } from "./node-crypto.adapter";
+import { ConfigService } from "../../../../shared/config/config.service";
 
 describe("NodeCryptoAdapter", () => {
   let adapter: NodeCryptoAdapter;
+  let configService: ConfigService;
 
-  beforeEach(() => {
-    adapter = new NodeCryptoAdapter();
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        NodeCryptoAdapter,
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn().mockReturnValue("test-secret-key"),
+          },
+        },
+      ],
+    }).compile();
+
+    adapter = module.get<NodeCryptoAdapter>(NodeCryptoAdapter);
+    configService = module.get<ConfigService>(ConfigService);
+    adapter.onModuleInit();
   });
 
   it("should encrypt and decrypt a string correctly", () => {

@@ -1,7 +1,7 @@
 import { SecretScope } from "../../domain/vault.types";
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 
-export const secrets = sqliteTable("secrets", {
+export const secrets = sqliteTable("secret", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   key: text("key").notNull().unique(),
   encryptedValue: text("encrypted_value").notNull(),

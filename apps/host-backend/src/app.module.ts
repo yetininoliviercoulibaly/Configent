@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { HealthController } from "./health.controller";
 import { DatabaseModule } from "./shared/database/database.module";
+import { ConfigModule } from "./shared/config/config.module";
 import { VaultModule } from "./modules/vault/vault.module";
 
 /**
@@ -18,7 +19,7 @@ import { VaultModule } from "./modules/vault/vault.module";
  * - US-105: RpcBridgeModule
  */
 @Module({
-  imports: [DatabaseModule, VaultModule],
+  imports: [ConfigModule, DatabaseModule, VaultModule],
   controllers: [HealthController],
   providers: [],
 })

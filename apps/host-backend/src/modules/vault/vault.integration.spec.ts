@@ -3,6 +3,7 @@ import { INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { VaultModule } from "./vault.module";
 import { DatabaseModule } from "../../shared/database/database.module";
+import { ConfigModule } from "../../shared/config/config.module";
 import { CreateSecretDto } from "./application/dtos/create-secret.dto";
 import { SecretScope } from "./domain/vault.types";
 
@@ -11,7 +12,7 @@ describe("Vault Integration", () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [DatabaseModule, VaultModule],
+      imports: [ConfigModule, DatabaseModule, VaultModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
@@ -23,7 +24,7 @@ describe("Vault Integration", () => {
   });
 
   it("/POST secrets (Create) & /GET secrets/:key (Retrieve)", async () => {
-    const key = "integration-test-key";
+    const key = `integration-test-key-${Date.now()}`;
     const value = "my-secret-value";
 
     // 1. Create Secret
@@ -43,7 +44,10 @@ describe("Vault Integration", () => {
       .get(`/vault/secrets/${key}`)
       .expect(200);
 
-    expect(response.body).toEqual({ value });
+    expect(response.body).toEqual({
+      success: true,
+      data: value,
+    });
   });
 
   it("/GET secrets/:key should return 404 for non-existent key", async () => {

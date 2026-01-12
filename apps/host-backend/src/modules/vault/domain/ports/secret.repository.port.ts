@@ -1,6 +1,6 @@
 import { SecretEntity } from "../entities/secret.entity";
 
-export const I_SECRET_REPOSITORY = Symbol("ISecretRepository");
+export const I_SECRET_REPOSITORY = "ISecretRepository";
 
 export interface ISecretRepository {
   findByKey(key: string): Promise<SecretEntity | null>;
