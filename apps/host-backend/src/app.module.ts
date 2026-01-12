@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { HealthController } from "./health.controller";
+import { DatabaseModule } from "./shared/database/database.module";
 
 /**
  * Root application module for Configent Host Backend.
@@ -16,7 +17,7 @@ import { HealthController } from "./health.controller";
  * - US-105: RpcBridgeModule
  */
 @Module({
-  imports: [],
+  imports: [DatabaseModule],
   controllers: [HealthController],
   providers: [],
 })

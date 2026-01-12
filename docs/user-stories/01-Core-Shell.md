@@ -30,10 +30,10 @@
 
 ### Acceptance Criteria
 
-- [ ] `better-sqlite3` is installed in Backend.
-- [ ] Drizzle ORM is configured.
-- [ ] Table `config` is defined (`instanceId`, `masterKeyHash`).
-- [ ] Migration script (`pnpm db:migrate`) creates the `config.db` file successfully.
+- [x] `better-sqlite3` is installed in Backend.
+- [x] Drizzle ORM is configured.
+- [x] Table `config` is defined (`instanceId`, `masterKeyHash`).
+- [x] Migration script (`pnpm db:migrate`) creates the `config.db` file successfully.
 
 ---
 
