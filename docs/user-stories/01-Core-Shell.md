@@ -61,11 +61,11 @@
 
 ### Acceptance Criteria
 
-- [ ] `packages/sandbox` module is created.
-- [ ] `SandboxService.createContext()` creates a new Isolate.
-- [ ] **Security Test:** The code `process.env` returns `undefined` inside the sandbox.
-- [ ] **Security Test:** The code `while(true){}` times out after 100ms (Resource Limit).
-- [ ] **Security Test:** Memory limit is enforced (e.g. 128MB).
+- [x] `packages/sandbox` module is created.
+- [x] `SandboxService.createContext()` creates a new Isolate.
+- [x] **Security Test:** The code `process.env` returns `undefined` inside the sandbox.
+- [x] **Security Test:** The code `while(true){}` times out after 100ms (Resource Limit).
+- [x] **Security Test:** Memory limit is enforced (e.g. 128MB).
 
 ---
 
