@@ -8,7 +8,7 @@ import { FilesystemPluginScanner } from "./infrastructure/adapters/filesystem-pl
 
 import { GetPluginStatusUseCase } from "./application/use-cases/get-plugin-status.use-case";
 import { PluginRpcFactory } from "./infrastructure/services/plugin-rpc.factory";
-import { InMemoryPermissionService } from "./infrastructure/adapters/in-memory-permission.service";
+import { DrizzlePermissionService } from "./infrastructure/adapters/drizzle-permission.service";
 
 /**
  * Module for plugin discovery and management.
@@ -33,7 +33,7 @@ import { InMemoryPermissionService } from "./infrastructure/adapters/in-memory-p
     },
     {
       provide: I_PERMISSION_SERVICE,
-      useClass: InMemoryPermissionService,
+      useClass: DrizzlePermissionService,
     },
   ],
   exports: [
