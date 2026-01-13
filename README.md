@@ -47,6 +47,31 @@ pnpm install
 pnpm build
 ```
 
+### Environment Configuration
+
+Copy the example environment files and customize as needed:
+
+```bash
+# Backend configuration
+cp apps/host-backend/.env.example apps/host-backend/.env
+
+# Frontend configuration
+cp apps/host-frontend/.env.example apps/host-frontend/.env
+```
+
+**Backend (`apps/host-backend/.env`):**
+| Variable | Default | Description |
+| --------------- | ----------------------------- | -------------------------- |
+| `PORT` | `3000` | Backend server port |
+| `DATABASE_URL` | `./data/config.db` | SQLite database path |
+| `FRONTEND_URL` | `http://localhost:5173` | CORS allowed origin |
+
+**Frontend (`apps/host-frontend/.env`):**
+| Variable | Default | Description |
+| ------------------ | -------------------------- | -------------------------- |
+| `VITE_PORT` | `5173` | Frontend dev server port |
+| `VITE_BACKEND_URL` | `http://localhost:3000` | Backend API URL for proxy |
+
 ### Running the Application
 
 ```bash
