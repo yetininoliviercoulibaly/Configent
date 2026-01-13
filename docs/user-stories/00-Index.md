@@ -45,10 +45,10 @@ This index lists all User Stories for the Configent Phase 1 MVP, grouped by Epic
 
 | ID         | Title                             | Status |
 | :--------- | :-------------------------------- | :----- |
-| **US-401** | **Journaling UI Widget**          | `TODO` |
-| **US-402** | **GitHub MCP Client Integration** | `TODO` |
-| **US-403** | **Web Search MCP Integration**    | `TODO` |
-| **US-404** | **Content Synthesis Logic**       | `TODO` |
+| **US-401** | **Journaling UI Widget**          | `DONE` |
+| **US-402** | **GitHub MCP Client Integration** | `DONE` |
+| **US-403** | **Web Search MCP Integration**    | `DONE` |
+| **US-404** | **Content Synthesis Logic**       | `DONE` |
 
 ## [EPIC-05] Host Frontend & UX
 

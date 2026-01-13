@@ -1,0 +1,24 @@
+{
+  "id": "com.configent.editor",
+  "name": "The Editor",
+  "version": "1.0.0",
+  "description": "A journaling agent with multi-MCP synthesis for daily briefings.",
+  "entrypoints": {
+    "backend": "backend/index.js",
+    "frontend": "frontend/index.html"
+  },
+  "permissions": [
+    "storage:read",
+    "storage:write",
+    "mcp:call",
+    "schedule:register",
+    "ui:notify"
+  ],
+  "tiles": [
+    {
+      "id": "journal",
+      "name": "Journal",
+      "size": "2x2"
+    }
+  ]
+}
