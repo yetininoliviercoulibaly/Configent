@@ -23,7 +23,7 @@ This index lists all User Stories for the Configent Phase 1 MVP, grouped by Epic
 | ID         | Title                               | Status |
 | :--------- | :---------------------------------- | :----- |
 | **US-201** | **Plugin Manifest Parser**          | `DONE` |
-| **US-202** | **Plugin Loader (Disk Scan)**       | `TODO` |
+| **US-202** | **Plugin Loader (Disk Scan)**       | `DONE` |
 | **US-203** | **Runtime Supervisor (Start/Stop)** | `TODO` |
 | **US-204** | **Permission Grant System**         | `TODO` |
 

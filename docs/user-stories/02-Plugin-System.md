@@ -30,10 +30,10 @@
 
 ### Acceptance Criteria
 
-- [ ] Service scans recursive directories or zip files in `/plugins`.
-- [ ] Ignores directories without `manifest.json`.
-- [ ] Returns a list of available plugins with their metadata.
-- [ ] Handles duplicates (Logs warning, skips second instance).
+- [x] Service scans recursive directories or zip files in `/plugins`.
+- [x] Ignores directories without `manifest.json`.
+- [x] Returns a list of available plugins with their metadata.
+- [x] Handles duplicates (Logs warning, skips second instance).
 
 ---
 
