@@ -19,9 +19,13 @@
     "test:cov": "vitest run --coverage",
     "clean": "rimraf dist"
   },
+  "dependencies": {
+    "zod": "^3.24.0"
+  },
   "devDependencies": {
     "rimraf": "^6.0.1",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
   }
 }
+

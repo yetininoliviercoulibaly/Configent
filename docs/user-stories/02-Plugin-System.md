@@ -14,11 +14,11 @@
 
 ### Acceptance Criteria
 
-- [ ] Schema Validation (Zod) for `manifest.json`.
-- [ ] Field `id` must be reverse-domain style (e.g., `com.example.plugin`).
-- [ ] Field `permissions` must contain only known scopes.
-- [ ] Field `tiles` must follow the Bento UI schema.
-- [ ] Error is thrown with specific message if schema is invalid.
+- [x] Schema Validation (Zod) for `manifest.json`.
+- [x] Field `id` must be reverse-domain style (e.g., `com.example.plugin`).
+- [x] Field `permissions` must contain only known scopes.
+- [x] Field `tiles` must follow the Bento UI schema.
+- [x] Error is thrown with specific message if schema is invalid.
 
 ---
 
