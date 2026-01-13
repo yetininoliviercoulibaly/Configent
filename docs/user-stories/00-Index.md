@@ -34,9 +34,9 @@ This index lists all User Stories for the Configent Phase 1 MVP, grouped by Epic
 
 | ID         | Title                            | Status |
 | :--------- | :------------------------------- | :----- |
-| **US-301** | **Scheduler API Implementation** | `TODO` |
-| **US-302** | **Moderator Plugin Scaffold**    | `TODO` |
-| **US-303** | **MCP Polling Logic**            | `TODO` |
+| **US-301** | **Scheduler API Implementation** | `DONE` |
+| **US-302** | **Moderator Plugin Scaffold**    | `DONE` |
+| **US-303** | **MCP Polling Logic**            | `DONE` |
 
 ## [EPIC-04] Reference Plugin: The Editor
 
@@ -49,3 +49,15 @@ This index lists all User Stories for the Configent Phase 1 MVP, grouped by Epic
 | **US-402** | **GitHub MCP Client Integration** | `TODO` |
 | **US-403** | **Web Search MCP Integration**    | `TODO` |
 | **US-404** | **Content Synthesis Logic**       | `TODO` |
+
+## [EPIC-05] Host Frontend & UX
+
+> **Goal:** Create a modern, responsive, and secure UI.
+> [Details](file:///c:/Source/Tools/Configent/docs/user-stories/05-Host-Frontend.md)
+
+| ID         | Title                                | Status |
+| :--------- | :----------------------------------- | :----- |
+| **US-501** | **Dashboard Grid Layout (Bento)**    | `TODO` |
+| **US-502** | **Plugin Store & Installation Flow** | `TODO` |
+| **US-503** | **Permissions Confirmation Modal**   | `TODO` |
+| **US-504** | **Plugin Webview Host (Iframe)**     | `TODO` |

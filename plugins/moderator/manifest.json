@@ -1,0 +1,15 @@
+{
+  "id": "com.configent.moderator",
+  "name": "The Moderator",
+  "version": "1.0.0",
+  "description": "Reference implementation for content moderation using MCP.",
+  "entrypoints": {
+    "backend": "backend/index.js",
+    "frontend": "frontend/index.html"
+  },
+  "permissions": [
+    "schedule:register",
+    "ui:notify",
+    "mcp:call"
+  ]
+}

@@ -45,7 +45,7 @@ export class FilesystemPluginScanner implements IPluginScanner {
     }
 
     // List directory entries
-    let entries: Awaited<ReturnType<typeof fs.readdir>>;
+    let entries: import("fs").Dirent[];
     try {
       entries = await fs.readdir(pluginsDir, { withFileTypes: true });
     } catch (error) {

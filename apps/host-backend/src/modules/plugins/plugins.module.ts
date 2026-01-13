@@ -9,16 +9,20 @@ import { FilesystemPluginScanner } from "./infrastructure/adapters/filesystem-pl
 import { GetPluginStatusUseCase } from "./application/use-cases/get-plugin-status.use-case";
 import { PluginRpcFactory } from "./infrastructure/services/plugin-rpc.factory";
 import { DrizzlePermissionService } from "./infrastructure/adapters/drizzle-permission.service";
+import { SchedulerModule } from "../scheduler/scheduler.module";
+import { SchedulerListener } from "./infrastructure/listeners/scheduler.listener";
 
 /**
  * Module for plugin discovery and management.
  */
 @Module({
+  imports: [SchedulerModule],
   providers: [
     ScanPluginsUseCase,
     StartPluginUseCase,
     StopPluginUseCase,
     GetPluginStatusUseCase,
+    SchedulerListener,
     {
       provide: I_PLUGIN_SCANNER,
       useClass: FilesystemPluginScanner,
@@ -37,11 +41,11 @@ import { DrizzlePermissionService } from "./infrastructure/adapters/drizzle-perm
     },
   ],
   exports: [
-    ScanPluginsUseCase, 
-    StartPluginUseCase, 
-    StopPluginUseCase, 
+    ScanPluginsUseCase,
+    StartPluginUseCase,
+    StopPluginUseCase,
     GetPluginStatusUseCase,
-    I_PLUGIN_SCANNER, 
+    I_PLUGIN_SCANNER,
     I_PLUGIN_SUPERVISOR,
     I_PERMISSION_SERVICE,
   ],

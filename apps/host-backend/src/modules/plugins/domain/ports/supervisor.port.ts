@@ -33,6 +33,13 @@ export interface IPluginSupervisor {
    * @param pluginId - The unique ID of the plugin
    */
   getPluginStatus(pluginId: string): PluginStatus;
+
+  /**
+   * Triggers a scheduler event in a running plugin.
+   * @param pluginId - The unique ID of the plugin
+   * @param handlerId - The ID of the scheduler handler to execute
+   */
+  triggerSchedulerEvent(pluginId: string, handlerId: string): Promise<void>;
 }
 
 /**

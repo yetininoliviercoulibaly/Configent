@@ -3,6 +3,7 @@
 **Goal:** Validate "Pull" architecture, Scheduler, and MCP integration.
 **Priority:** Medium
 **Phase:** 1 (MVP)
+**Status:** ✅ Complete
 
 ---
 
@@ -14,9 +15,9 @@
 
 ### Acceptance Criteria
 
-- [ ] Shell exposes `scheduler.register(cron, actionId)`.
-- [ ] Shell uses a job queue (BullMQ or Node-Cron) to manage schedules.
-- [ ] When cron triggers, Shell calls the Plugin's `onSchedulerEvent(actionId)`.
+- [x] Shell exposes `scheduler.register(cron, actionId)`.
+- [x] Shell uses a job queue (BullMQ or Node-Cron) to manage schedules.
+- [x] When cron triggers, Shell calls the Plugin's `onSchedulerEvent(actionId)`.
 
 ---
 
@@ -28,9 +29,9 @@
 
 ### Acceptance Criteria
 
-- [ ] `plugins/moderator/manifest.json` is valid.
-- [ ] `plugins/moderator/backend/index.js` handles the startup.
-- [ ] `plugins/moderator/frontend/index.html` displays a basic "Status: Running" widget.
+- [x] `plugins/moderator/manifest.json` is valid.
+- [x] `plugins/moderator/backend/index.js` handles the startup.
+- [x] `plugins/moderator/frontend/index.html` displays a basic "Status: Running" widget.
 
 ---
 
@@ -42,7 +43,7 @@
 
 ### Acceptance Criteria
 
-- [ ] **Mock MCP:** Create a fake MCP server (or valid mock response) returning comments.
-- [ ] Agent calls `rpc.mcp.call('wordpress', 'get_comments')`.
-- [ ] Agent iterates over comments and logs "Toxic" or "Safe" (Dummy logic for MVP).
-- [ ] Agent sends a notification to Shell if Toxic found: `rpc.notify.send('Technique', 'Toxic comment found!')`.
+- [x] **Mock MCP:** Create a fake MCP server (or valid mock response) returning comments.
+- [x] Agent calls `rpc.mcp.call('wordpress', 'get_comments')`.
+- [x] Agent iterates over comments and logs "Toxic" or "Safe" (Dummy logic for MVP).
+- [x] Agent sends a notification to Shell if Toxic found: `rpc.notify.send('warn', 'Toxic comment found!')`.

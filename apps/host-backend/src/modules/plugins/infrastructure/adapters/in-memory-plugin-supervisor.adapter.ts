@@ -62,4 +62,17 @@ export class InMemoryPluginSupervisor implements IPluginSupervisor {
   getPluginStatus(pluginId: string): PluginStatus {
     return this.statuses.get(pluginId) || PluginStatus.STOPPED;
   }
+
+  async triggerSchedulerEvent(pluginId: string, handlerId: string): Promise<void> {
+    const instance = this.instances.get(pluginId);
+    if (!instance) {
+      this.logger.warn(`Cannot trigger scheduler event for plugin ${pluginId}: Instance not found.`);
+      return;
+    }
+
+    this.logger.log(`Triggering scheduler event for plugin ${pluginId}: ${handlerId}`);
+    
+    // US-301: The plugin must expose 'onSchedulerEvent(handlerId)'
+    await instance.execute(`if (typeof onSchedulerEvent === 'function') { onSchedulerEvent("${handlerId}"); }`);
+  }
 }

@@ -46,6 +46,7 @@ export class SandboxService {
       const rpcReferences: ivm.Reference<(...args: any[]) => string>[] = [];
       for (const methodName of rpcMethodNames) {
         const handler = options.rpc[methodName];
+        if (!handler) continue;
         rpcReferences.push(new ivm.Reference((...args: any[]) => {
           const result = handler(...args);
           // Serialize the result to JSON for safe transfer
