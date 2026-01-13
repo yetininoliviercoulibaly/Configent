@@ -57,7 +57,7 @@ This index lists all User Stories for the Configent Phase 1 MVP, grouped by Epic
 
 | ID         | Title                                | Status |
 | :--------- | :----------------------------------- | :----- |
-| **US-501** | **Dashboard Grid Layout (Bento)**    | `TODO` |
-| **US-502** | **Plugin Store & Installation Flow** | `TODO` |
-| **US-503** | **Permissions Confirmation Modal**   | `TODO` |
-| **US-504** | **Plugin Webview Host (Iframe)**     | `TODO` |
+| **US-501** | **Dashboard Grid Layout (Bento)**    | `DONE` |
+| **US-502** | **Plugin Store & Installation Flow** | `DONE` |
+| **US-503** | **Permissions Confirmation Modal**   | `DONE` |
+| **US-504** | **Plugin Webview Host (Iframe)**     | `DONE` |

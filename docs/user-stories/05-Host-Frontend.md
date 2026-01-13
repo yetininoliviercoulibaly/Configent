@@ -3,6 +3,7 @@
 **Goal:** Create a modern, responsive, and secure UI for managing agents.
 **Priority:** High
 **Phase:** 1 (MVP)
+**Status:** ✅ Complete
 
 ---
 
@@ -12,16 +13,12 @@
 **I want** a flexible grid interface,
 **So that** I can see all my running agents' status at a glance.
 
-### Visual Spec
-
-![Bento Grid Wireframe](C:\Users\yetin.gemini\antigravity\brain\d14e04e7-2909-45c1-8290-25faed902ea6\bento_dashboard_wireframe_1768298840199.png)
-
 ### Acceptance Criteria
 
-- [ ] **Grid System:** Implement a CSS Grid layout (React-Grid-Layout or pure CSS).
-- [ ] **Cards:** Standard container component with rounded corners `rounded-xl`, dark background `bg-card`.
-- [ ] **Responsiveness:** Stacks vertically on mobile.
-- [ ] **Navbar:** Fixed top bar with "Context: Localhost" indicator.
+- [x] **Grid System:** Implement a CSS Grid layout (React-Grid-Layout or pure CSS).
+- [x] **Cards:** Standard container component with rounded corners `rounded-xl`, dark background `bg-card`.
+- [x] **Responsiveness:** Stacks vertically on mobile.
+- [x] **Navbar:** Fixed top bar with "Context: Localhost" indicator.
 
 ---
 
@@ -33,9 +30,9 @@
 
 ### Acceptance Criteria
 
-- [ ] **Upload:** Drag & Drop zone for `.zip` files.
-- [ ] **Git URL:** Input field to clone from a Git repository.
-- [ ] **Validation:** Frontend parses `manifest.json` before upload to display metadata (Name, Version).
+- [x] **Upload:** Drag & Drop zone for `.zip` files.
+- [x] **Git URL:** Input field to clone from a Git repository.
+- [x] **Validation:** Frontend parses `manifest.json` before upload to display metadata (Name, Version).
 
 ---
 
@@ -45,17 +42,13 @@
 **I want** to explicitly grant permissions to a plugin,
 **So that** I understand the security risks before running code.
 
-### Visual Spec
-
-![Plugin Install Modal Wireframe](C:\Users\yetin.gemini\antigravity\brain\d14e04e7-2909-45c1-8290-25faed902ea6\plugin_install_wireframe_1768298861327.png)
-
 ### Acceptance Criteria
 
-- [ ] **Trigger:** Opens automatically after parsing a new plugin manifest.
-- [ ] **Design:** Modal overlay with "Dimmed" background.
-- [ ] **List:** Enumerates all requested permissions (`vault:read`, `network:public`).
-- [ ] **Icons:** Uses distinct icons for risky permissions (e.g., Unlocked Padlock for Vault).
-- [ ] **Action:** "Install & Grant" button sends confirmation to Backend.
+- [x] **Trigger:** Opens automatically after parsing a new plugin manifest.
+- [x] **Design:** Modal overlay with "Dimmed" background.
+- [x] **List:** Enumerates all requested permissions (`vault:read`, `network:public`).
+- [x] **Icons:** Uses distinct icons for risky permissions (e.g., Unlocked Padlock for Vault).
+- [x] **Action:** "Install & Grant" button sends confirmation to Backend.
 
 ---
 
@@ -67,6 +60,6 @@
 
 ### Acceptance Criteria
 
-- [ ] Component `<PluginHost src="..." />`.
-- [ ] **Security:** Iframe must have `sandbox="allow-scripts allow-forms"`.
-- [ ] **Communication:** Setup `window.addEventListener('message', ...)` to bridge UI events to Backend RPC.
+- [x] Component `<PluginHost src="..." />`.
+- [x] **Security:** Iframe must have `sandbox="allow-scripts allow-forms"`.
+- [x] **Communication:** Setup `window.addEventListener('message', ...)` to bridge UI events to Backend RPC.
