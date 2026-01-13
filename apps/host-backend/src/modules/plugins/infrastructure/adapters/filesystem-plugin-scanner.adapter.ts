@@ -6,8 +6,8 @@ import type {
   IPluginScanner,
   IPluginScanResult,
   IPluginScanError,
+  DiscoveredPlugin,
 } from "../../domain/ports";
-import type { IPluginManifest } from "@configent/sdk";
 
 /**
  * Filesystem-based implementation of IPluginScanner.
@@ -33,7 +33,7 @@ export class FilesystemPluginScanner implements IPluginScanner {
    * @returns Scan result with plugins and errors
    */
   async scanDirectory(pluginsDir: string): Promise<IPluginScanResult> {
-    const plugins: IPluginManifest[] = [];
+    const plugins: DiscoveredPlugin[] = [];
     const errors: IPluginScanError[] = [];
 
     // Check if plugins directory exists
@@ -80,9 +80,12 @@ export class FilesystemPluginScanner implements IPluginScanner {
         const parseResult = safeParseManifest(rawManifest);
 
         if (parseResult.success) {
-          plugins.push(parseResult.data);
+          plugins.push({
+            manifest: parseResult.data,
+            path: pluginDir,
+          });
           this.logger.debug(
-            `Discovered plugin: ${parseResult.data.id} (${parseResult.data.name})`
+            `Discovered plugin: ${parseResult.data.id} (${parseResult.data.name}) at ${pluginDir}`
           );
         } else {
           // Zod validation failed

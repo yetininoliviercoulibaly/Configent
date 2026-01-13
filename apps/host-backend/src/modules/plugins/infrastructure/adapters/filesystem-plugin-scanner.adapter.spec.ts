@@ -82,7 +82,8 @@ describe("FilesystemPluginScanner", () => {
     const result = await scanner.scanDirectory(pluginsDir);
 
     expect(result.plugins).toHaveLength(1);
-    expect(result.plugins[0].id).toBe("com.test.plugin");
+    expect(result.plugins[0].manifest.id).toBe("com.test.plugin");
+    expect(result.plugins[0].path).toBe(path.join(pluginsDir, "plugin-a"));
     expect(result.errors).toHaveLength(0);
     expect(mockFs.readFile).toHaveBeenCalledWith(
       path.join(pluginsDir, "plugin-a", "manifest.json"),

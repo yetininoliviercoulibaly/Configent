@@ -1,4 +1,5 @@
 import type { IPluginManifest } from "@configent/sdk";
+export * from "./supervisor.port";
 
 /**
  * Token for IPluginScanner dependency injection.
@@ -6,13 +7,28 @@ import type { IPluginManifest } from "@configent/sdk";
 export const I_PLUGIN_SCANNER = Symbol("IPluginScanner");
 
 /**
+ * Represents a plugin discovered on the filesystem.
+ */
+export interface DiscoveredPlugin {
+  /**
+   * The parsed manifest of the plugin.
+   */
+  manifest: IPluginManifest;
+
+  /**
+   * The absolute path to the directory containing the plugin.
+   */
+  path: string;
+}
+
+/**
  * Result of a plugin scan operation.
  */
 export interface IPluginScanResult {
   /**
-   * Successfully parsed plugin manifests.
+   * Successfully discovered plugins.
    */
-  plugins: IPluginManifest[];
+  plugins: DiscoveredPlugin[];
 
   /**
    * Errors encountered during scanning (invalid manifests, missing files, etc.).
