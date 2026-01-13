@@ -3,6 +3,7 @@ import { HealthController } from "./health.controller";
 import { DatabaseModule } from "./shared/database/database.module";
 import { ConfigModule } from "./shared/config/config.module";
 import { VaultModule } from "./modules/vault/vault.module";
+import { PluginsModule } from "./modules/plugins/plugins.module";
 
 /**
  * Root application module for Configent Host Backend.
@@ -19,7 +20,7 @@ import { VaultModule } from "./modules/vault/vault.module";
  * - US-105: RpcBridgeModule
  */
 @Module({
-  imports: [ConfigModule, DatabaseModule, VaultModule],
+  imports: [ConfigModule, DatabaseModule, VaultModule, PluginsModule],
   controllers: [HealthController],
   providers: [],
 })
