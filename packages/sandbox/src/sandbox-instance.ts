@@ -9,8 +9,10 @@ export class SandboxInstance {
   private isolate: ivm.Isolate | null = null;
   private context: ivm.Context | null = null;
   private memoryLimit: number;
+  private options: ISandboxOptions;
 
   constructor(options: ISandboxOptions = {}) {
+    this.options = options;
     this.memoryLimit = options.memoryLimit ?? 128;
   }
 
@@ -42,6 +44,44 @@ export class SandboxInstance {
         },
       ]
     );
+
+    // Inject RPC handlers if provided
+    if (this.options.rpc) {
+      const rpcMethodNames = Object.keys(this.options.rpc);
+
+      // Create isolated references for each RPC method
+      // Use JSON serialization to safely pass complex objects
+      const rpcReferences: ivm.Reference<(...args: any[]) => string>[] = [];
+      for (const methodName of rpcMethodNames) {
+        const handler = this.options.rpc[methodName];
+        rpcReferences.push(
+          new ivm.Reference((...args: any[]) => {
+            const result = handler(...args);
+            // Serialize the result to JSON for safe transfer
+            return JSON.stringify(result);
+          })
+        );
+      }
+
+      // Build the global.rpc object in the isolate
+      await this.context.evalClosure(
+        `
+        global.rpc = {};
+        const methodNames = $0;
+        const refs = $1;
+        for (let i = 0; i < methodNames.length; i++) {
+          const name = methodNames[i];
+          const ref = refs[i];
+          global.rpc[name] = function(...args) {
+            const jsonResult = ref.applySync(undefined, args, { arguments: { copy: true }, result: { copy: true } });
+            return JSON.parse(jsonResult);
+          };
+        }
+      `,
+        [rpcMethodNames, rpcReferences],
+        { arguments: { copy: true } }
+      );
+    }
   }
 
   /**

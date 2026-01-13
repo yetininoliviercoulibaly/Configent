@@ -64,3 +64,5 @@ export interface IPluginScanner {
    */
   scanDirectory(pluginsDir: string): Promise<IPluginScanResult>;
 }
+export * from "./permission.service.port";
+export * from "./rpc-factory.port";

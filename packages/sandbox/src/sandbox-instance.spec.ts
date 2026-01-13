@@ -33,4 +33,20 @@ describe("SandboxInstance", () => {
   it("should throw error if executing before initialization", async () => {
     await expect(sandbox.execute("1 + 1")).rejects.toThrow("Sandbox not initialized");
   });
+
+  it("should support RPC calls", async () => {
+    const rpcHandler = jest.fn().mockReturnValue("rpc-success");
+    sandbox = new SandboxInstance({
+      rpc: {
+        testMethod: rpcHandler,
+      },
+    });
+
+    await sandbox.initialize();
+
+    const result = await sandbox.execute("global.rpc.testMethod('hello')");
+    
+    expect(result).toBe("rpc-success");
+    expect(rpcHandler).toHaveBeenCalledWith("hello");
+  });
 });
