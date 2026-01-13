@@ -6,7 +6,12 @@ import {
   IPluginScanner,
   I_PLUGIN_SUPERVISOR,
   IPluginSupervisor,
+  I_PERMISSION_SERVICE,
+  IPermissionService,
+  I_PLUGIN_RPC_FACTORY,
+  IPluginRpcFactory,
 } from "../../domain/ports";
+import { type PermissionScope } from "@configent/sdk";
 import { ConfigService } from "../../../../shared/config/config.service"; // Corrected depth
 
 /**
@@ -26,6 +31,10 @@ export class StartPluginUseCase {
     private readonly pluginScanner: IPluginScanner,
     @Inject(I_PLUGIN_SUPERVISOR)
     private readonly pluginSupervisor: IPluginSupervisor,
+    @Inject(I_PERMISSION_SERVICE)
+    private readonly permissionService: IPermissionService,
+    @Inject(I_PLUGIN_RPC_FACTORY)
+    private readonly rpcFactory: IPluginRpcFactory,
     private readonly configService: ConfigService,
   ) {}
 
@@ -48,11 +57,27 @@ export class StartPluginUseCase {
     const entrypoint = plugin.manifest.entrypoint || "index.js";
     const entrypointPath = path.join(plugin.path, entrypoint);
 
+    // Resolve Permissions
+    const requestedPermissions = plugin.manifest.permissions || [];
+    const allowedScopes: PermissionScope[] = [];
+
+    for (const scope of requestedPermissions) {
+      const isGranted = await this.permissionService.isGranted(pluginId, scope);
+      if (isGranted) {
+        allowedScopes.push(scope);
+      } else {
+        this.logger.warn(`Permission denied: Plugin ${pluginId} requested '${scope}' but it is not granted.`);
+      }
+    }
+
+    // Create RPC handlers
+    const rpc = this.rpcFactory.createRpc(allowedScopes);
+
     try {
       const code = await fs.readFile(entrypointPath, "utf-8");
       
-      // Delegate to supervisor
-      await this.pluginSupervisor.startPlugin(pluginId, code);
+      // Delegate to supervisor with RPC options
+      await this.pluginSupervisor.startPlugin(pluginId, code, { rpc });
     } catch (error) {
       this.logger.error(`Failed to read entrypoint for ${pluginId}:`, error);
       throw error;

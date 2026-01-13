@@ -18,8 +18,9 @@ export interface IPluginSupervisor {
    * Starts a plugin in a persistent sandbox.
    * @param pluginId - The unique ID of the plugin (from manifest)
    * @param code - The JavaScript entrypoint code to execute
+   * @param options - Optional sandbox configuration (RPC, memory, etc)
    */
-  startPlugin(pluginId: string, code: string): Promise<void>;
+  startPlugin(pluginId: string, code: string, options?: any): Promise<void>;
 
   /**
    * Stops a plugin and releases its resources.

@@ -17,7 +17,7 @@ export class InMemoryPluginSupervisor implements IPluginSupervisor {
   // Map of pluginId -> Status
   private readonly statuses = new Map<string, PluginStatus>();
 
-  async startPlugin(pluginId: string, code: string): Promise<void> {
+  async startPlugin(pluginId: string, code: string, options: any = {}): Promise<void> {
     this.logger.log(`Starting plugin: ${pluginId}`);
 
     if (this.instances.has(pluginId)) {
@@ -28,6 +28,7 @@ export class InMemoryPluginSupervisor implements IPluginSupervisor {
     try {
       const sandbox = new SandboxInstance({
         memoryLimit: 128, // TODO: Make configurable per plugin
+        ...options, // Pass options (including RPC)
       });
 
       await sandbox.initialize();

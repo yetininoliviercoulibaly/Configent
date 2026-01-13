@@ -60,6 +60,6 @@
 
 ### Acceptance Criteria
 
-- [ ] On `startPlugin()`, system checks requested permissions against granted permissions in DB.
-- [ ] If permission `vault:read` is requested but not granted, the `vault` object is NOT injected into the sandbox.
-- [ ] Attempting to call a non-injected RPC function throws "Permission Denied" inside the sandbox.
+- [x] On `startPlugin()`, system checks requested permissions against granted permissions in DB.
+- [x] If permission `vault:read` is requested but not granted, the `vault` object is NOT injected into the sandbox.
+- [x] Attempting to call a non-injected RPC function throws "Permission Denied" inside the sandbox.
