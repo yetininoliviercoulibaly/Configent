@@ -12,6 +12,9 @@ export * from "./types/permissions.types.js";
 export * from "./types/rpc.types.js";
 export * from "./types/tile.types.js";
 
+// Validation exports
+export * from "./validation/manifest.schema.js";
+
 // Version constant
 export const SDK_VERSION = "0.1.0";
 
