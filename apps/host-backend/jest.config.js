@@ -16,6 +16,8 @@ const config = {
     "^@/(.*)$": "<rootDir>/$1",
     "^@configent/sdk/(.*)$": "<rootDir>/../../../packages/sdk/src/$1",
     "^@configent/sdk$": "<rootDir>/../../../packages/sdk/src/index.ts",
+    "^@configent/sandbox/(.*)$": "<rootDir>/../../../packages/sandbox/src/$1",
+    "^@configent/sandbox$": "<rootDir>/../../../packages/sandbox/src/index.ts",
   },
   collectCoverageFrom: ["**/*.(t|j)s", "!**/*.spec.ts"],
   coverageDirectory: "../coverage",

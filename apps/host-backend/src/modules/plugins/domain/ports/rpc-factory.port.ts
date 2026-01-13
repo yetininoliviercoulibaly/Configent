@@ -7,9 +7,10 @@ import type { PermissionScope } from "@configent/sdk";
 export interface IPluginRpcFactory {
   /**
    * Creates an RPC handler object containing only the methods allowed by the given scopes.
+   * @param pluginId - The ID of the plugin.
    * @param allowedScopes - List of permissions granted to the plugin
    */
-  createRpc(allowedScopes: PermissionScope[]): IRpcHandler;
+  createRpc(pluginId: string, allowedScopes: PermissionScope[]): IRpcHandler;
 }
 
 /**

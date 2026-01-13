@@ -4,12 +4,13 @@
     "module": "CommonJS",
     "moduleResolution": "Node",
     "outDir": "./dist",
-    "rootDir": "./src",
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
       "@configent/sdk/*": ["../../packages/sdk/src/*"],
-      "@configent/sdk": ["../../packages/sdk/src/index.ts"]
+      "@configent/sdk": ["../../packages/sdk/src/index.ts"],
+      "@configent/sandbox/*": ["../../packages/sandbox/src/*"],
+      "@configent/sandbox": ["../../packages/sandbox/src/index.ts"]
     },
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,

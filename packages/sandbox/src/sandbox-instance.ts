@@ -54,6 +54,7 @@ export class SandboxInstance {
       const rpcReferences: ivm.Reference<(...args: any[]) => string>[] = [];
       for (const methodName of rpcMethodNames) {
         const handler = this.options.rpc[methodName];
+        if (!handler) continue;
         rpcReferences.push(
           new ivm.Reference((...args: any[]) => {
             const result = handler(...args);
@@ -69,13 +70,32 @@ export class SandboxInstance {
         global.rpc = {};
         const methodNames = $0;
         const refs = $1;
+
+        // Helper to set nested property
+        function setNested(obj, path, value) {
+          const keys = path.split('.');
+          let current = obj;
+          for (let i = 0; i < keys.length - 1; i++) {
+            const key = keys[i];
+            if (!current[key]) current[key] = {};
+            current = current[key];
+          }
+          current[keys[keys.length - 1]] = value;
+        }
+
         for (let i = 0; i < methodNames.length; i++) {
           const name = methodNames[i];
           const ref = refs[i];
-          global.rpc[name] = function(...args) {
+          const handler = function(...args) {
             const jsonResult = ref.applySync(undefined, args, { arguments: { copy: true }, result: { copy: true } });
             return JSON.parse(jsonResult);
           };
+          
+          // Support both flat "rpc['ns.method']" and nested "rpc.ns.method"
+          global.rpc[name] = handler;
+          if (name.includes('.')) {
+            setNested(global.rpc, name, handler);
+          }
         }
       `,
         [rpcMethodNames, rpcReferences],

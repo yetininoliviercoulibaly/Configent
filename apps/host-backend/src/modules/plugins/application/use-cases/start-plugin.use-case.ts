@@ -12,15 +12,9 @@ import {
   IPluginRpcFactory,
 } from "../../domain/ports";
 import { type PermissionScope } from "@configent/sdk";
-import { ConfigService } from "../../../../shared/config/config.service"; // Corrected depth
 
 /**
  * Use case to start a plugin.
- *
- * Flow:
- * 1. Scan /plugins to find the plugin path
- * 2. Read the entrypoint file
- * 3. Start the plugin via Supervisor
  */
 @Injectable()
 export class StartPluginUseCase {
@@ -31,19 +25,17 @@ export class StartPluginUseCase {
     private readonly pluginScanner: IPluginScanner,
     @Inject(I_PLUGIN_SUPERVISOR)
     private readonly pluginSupervisor: IPluginSupervisor,
-    @Inject(I_PERMISSION_SERVICE)
-    private readonly permissionService: IPermissionService,
     @Inject(I_PLUGIN_RPC_FACTORY)
     private readonly rpcFactory: IPluginRpcFactory,
-    private readonly configService: ConfigService,
+    @Inject(I_PERMISSION_SERVICE)
+    private readonly permissionService: IPermissionService,
   ) {}
 
   async execute(pluginId: string): Promise<void> {
     this.logger.log(`Attempting to start plugin: ${pluginId}`);
 
     // TODO: optimize this by caching scan results or using a DB
-    const pluginsDir = path.resolve(process.cwd(), "plugins"); // Default for now
-    // Ideally get pluginsDir from ConfigService but for now hardcode/resolve
+    const pluginsDir = path.resolve(process.cwd(), "plugins");
     
     // Scan to find the plugin
     const scanResult = await this.pluginScanner.scanDirectory(pluginsDir);
@@ -71,7 +63,7 @@ export class StartPluginUseCase {
     }
 
     // Create RPC handlers
-    const rpc = this.rpcFactory.createRpc(allowedScopes);
+    const rpc = this.rpcFactory.createRpc(pluginId, allowedScopes);
 
     try {
       const code = await fs.readFile(entrypointPath, "utf-8");
