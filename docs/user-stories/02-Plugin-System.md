@@ -45,10 +45,10 @@
 
 ### Acceptance Criteria
 
-- [ ] Method `startPlugin(id)` initializes the `isolated-vm` Context.
-- [ ] Method `stopPlugin(id)` disposes the Context and releases memory.
-- [ ] Status of plugin is tracked (`STOPPED`, `RUNNING`, `ERROR`).
-- [ ] Failing to start (syntax error in JS) transitions state to `ERROR`.
+- [x] Method `startPlugin(id)` initializes the `isolated-vm` Context.
+- [x] Method `stopPlugin(id)` disposes the Context and releases memory.
+- [x] Status of plugin is tracked (`STOPPED`, `RUNNING`, `ERROR`).
+- [x] Failing to start (syntax error in JS) transitions state to `ERROR`.
 
 ---
 

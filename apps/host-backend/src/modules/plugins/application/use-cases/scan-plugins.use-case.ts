@@ -1,9 +1,9 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
-import type { IPluginManifest } from "@configent/sdk";
 import {
   I_PLUGIN_SCANNER,
   IPluginScanner,
   IPluginScanResult,
+  DiscoveredPlugin,
 } from "../../domain/ports";
 
 /**
@@ -36,16 +36,16 @@ export class ScanPluginsUseCase {
 
     // Handle duplicates: keep first occurrence, log warning for others
     const seenIds = new Set<string>();
-    const deduplicatedPlugins: IPluginManifest[] = [];
+    const deduplicatedPlugins: DiscoveredPlugin[] = [];
 
     for (const plugin of scanResult.plugins) {
-      if (seenIds.has(plugin.id)) {
+      if (seenIds.has(plugin.manifest.id)) {
         this.logger.warn(
-          `Duplicate plugin ID detected: "${plugin.id}". Keeping first instance, skipping duplicate.`
+          `Duplicate plugin ID detected: "${plugin.manifest.id}". Keeping first instance, skipping duplicate.`
         );
         continue;
       }
-      seenIds.add(plugin.id);
+      seenIds.add(plugin.manifest.id);
       deduplicatedPlugins.push(plugin);
     }
 
