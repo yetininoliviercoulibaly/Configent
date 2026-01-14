@@ -41,7 +41,7 @@ export class PluginRpcFactory implements IPluginRpcFactory {
     // MCP RPCs
     "mcp.call": {
       scope: "mcp:call",
-      handler: (server: string, method: string, params: any) => {
+      handler: (server: string, method: string, _params: any) => {
         this.logger.log(`RPC [mcp.call] server=${server}, method=${method}`);
         
         // Mock WordPress MCP for US-303
@@ -53,7 +53,41 @@ export class PluginRpcFactory implements IPluginRpcFactory {
           ];
         }
         
+        // Mock GitHub MCP for US-402
+        if (server === "github" && method === "get_commits") {
+          return [
+            { sha: "abc1234", message: "feat: Add user authentication", author: "dev" },
+            { sha: "def5678", message: "fix: Resolve login bug", author: "dev" },
+            { sha: "ghi9012", message: "docs: Update README", author: "dev" },
+          ];
+        }
+
+        // Mock Brave Search MCP for US-403
+        if (server === "brave-search" && method === "search") {
+          return [
+            { title: ".NET 9 Performance Improvements", url: "https://devblogs.microsoft.com/dotnet/net-9-perf" },
+            { title: "What's New in .NET 9", url: "https://learn.microsoft.com/dotnet/core/whats-new/dotnet-9" },
+          ];
+        }
+        
         return [];
+      },
+    },
+    // Store RPCs
+    "store.get": {
+      scope: "storage:read",
+      handler: (key: string) => {
+        this.logger.log(`RPC [store.get] key=${key}`);
+        // Mock: In a real app, this would query the database
+        return null;
+      },
+    },
+    "store.set": {
+      scope: "storage:write",
+      handler: (key: string, value: any) => {
+        this.logger.log(`RPC [store.set] key=${key}, value=${typeof value === 'string' ? value.substring(0, 50) + '...' : value}`);
+        // Mock: In a real app, this would persist to the database
+        return true;
       },
     },
   };

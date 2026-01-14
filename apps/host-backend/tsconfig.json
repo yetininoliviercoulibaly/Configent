@@ -1,21 +1,41 @@
 {
-  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "module": "CommonJS",
     "moduleResolution": "Node",
+    "target": "ES2022",
+    "lib": ["ES2022"],
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
-      "@configent/sdk/*": ["../../packages/sdk/src/*"],
-      "@configent/sdk": ["../../packages/sdk/src/index.ts"],
-      "@configent/sandbox/*": ["../../packages/sandbox/src/*"],
-      "@configent/sandbox": ["../../packages/sandbox/src/index.ts"]
+      "@configent/sdk/*": ["../../packages/sdk/dist/*"],
+      "@configent/sdk": ["../../packages/sdk/dist"],
+      "@configent/sandbox/*": ["../../packages/sandbox/dist/*"],
+      "@configent/sandbox": ["../../packages/sandbox/dist"]
     },
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "ES2022",
-    "incremental": true
+    "incremental": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "test", "**/*.spec.ts"]

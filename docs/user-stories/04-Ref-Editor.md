@@ -3,6 +3,7 @@
 **Goal:** Validate Complex UI, Privacy, and Multi-MCP flows.
 **Priority:** Medium
 **Phase:** 1 (MVP)
+**Status:** ✅ Complete
 
 ---
 
@@ -14,10 +15,10 @@
 
 ### Acceptance Criteria
 
-- [ ] Plugin exposes a Large Tile (2x2) in `manifest.json`.
-- [ ] Frontend uses a React Rich Text Editor (e.g., TipTap or simple textarea).
-- [ ] Autosave: Typing sends `rpc.store.set('journal_YYYY-MM-DD', content)` to Shell.
-- [ ] Persisted content reloads when reopening the app.
+- [x] Plugin exposes a Large Tile (2x2) in `manifest.json`.
+- [x] Frontend uses a React Rich Text Editor (e.g., TipTap or simple textarea).
+- [x] Autosave: Typing sends `rpc.store.set('journal_YYYY-MM-DD', content)` to Shell.
+- [x] Persisted content reloads when reopening the app.
 
 ---
 
@@ -29,9 +30,9 @@
 
 ### Acceptance Criteria
 
-- [ ] Agent calls `rpc.mcp.call('github', 'get_commits', { since: '24h' })`.
-- [ ] Mock/Real GitHub MCP returns JSON list of commits.
-- [ ] Agent formats a Markdown list of commits.
+- [x] Agent calls `rpc.mcp.call('github', 'get_commits', { since: '24h' })`.
+- [x] Mock/Real GitHub MCP returns JSON list of commits.
+- [x] Agent formats a Markdown list of commits.
 
 ---
 
@@ -43,8 +44,8 @@
 
 ### Acceptance Criteria
 
-- [ ] Agent calls `rpc.mcp.call('brave-search', 'search', { q: '.NET 9 features' })`.
-- [ ] Mock/Real Search MCP returns search results.
+- [x] Agent calls `rpc.mcp.call('brave-search', 'search', { q: '.NET 9 features' })`.
+- [x] Mock/Real Search MCP returns search results.
 
 ---
 
@@ -56,8 +57,8 @@
 
 ### Acceptance Criteria
 
-- [ ] **Workflow:** Triggered by Scheduler (e.g. 8:00 AM).
-- [ ] Fetches Journal + GitHub + Search.
-- [ ] (Simulator) Concatenates texts and simulates an LLM call (or calls real LLM if key provided).
-- [ ] Generates a Markdown Report.
-- [ ] report is saved to `store` and displayed in the UI Widget tab "Briefings".
+- [x] **Workflow:** Triggered by Scheduler (e.g. 8:00 AM).
+- [x] Fetches Journal + GitHub + Search.
+- [x] (Simulator) Concatenates texts and simulates an LLM call (or calls real LLM if key provided).
+- [x] Generates a Markdown Report.
+- [x] Report is saved to `store` and displayed in the UI Widget tab "Briefings".

@@ -26,67 +26,6 @@ Configent is an **Open-Core** platform for orchestrating AI agents (Plugins) in 
 - **For Developers**: An OS for agents. Authentication, secure storage, logging, and unified UI — all handled. No need to build a complete SaaS for a simple agent script.
 - **For Users**: Data sovereignty. API keys and data never leave your infrastructure (localhost or personal VPS).
 
-## 🏗️ Architecture
-
-Configent uses a **Micro-Kernel (Host/Plugin)** architecture:
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                         Host (Shell)                            │
-├──────────────────────────┬──────────────────────────────────────┤
-│   Frontend (React/Vite)  │      Backend (NestJS)                │
-│   ├── Grid UI Dashboard  │      ├── Vault (AES-256-GCM)         │
-│   ├── Plugin Tiles       │      ├── Sandbox (isolated-vm)       │
-│   └── Permission Modals  │      ├── Scheduler (node-cron)       │
-│                          │      ├── RPC Bridge                  │
-│                          │      └── SQLite (Drizzle ORM)        │
-└──────────────────────────┴──────────────────────────────────────┘
-                                    │
-                         ┌──────────┴──────────┐
-                         │   Plugin Runtime    │
-                         │   (V8 Isolates)     │
-                         │   ┌─────────────┐   │
-                         │   │ Moderator   │   │
-                         │   └─────────────┘   │
-                         └─────────────────────┘
-```
-
-## 📁 Project Structure
-
-```
-configent/
-├── apps/
-│   ├── host-backend/        # NestJS - Core Shell Backend
-│   │   └── src/
-│   │       ├── modules/     # Feature modules (Hexagonal Architecture)
-│   │       │   ├── vault/       # Secret encryption service
-│   │       │   ├── plugins/     # Plugin lifecycle management
-│   │       │   └── scheduler/   # Cron job management
-│   │       └── shared/      # Database, Guards, Utils
-│   │
-│   └── host-frontend/       # React + Vite - Dashboard UI
-│       └── src/
-│           ├── app/         # Routes/Pages
-│           ├── components/  # UI Components (Dumb)
-│           └── features/    # Feature modules (Smart)
-│
-├── packages/
-│   ├── sdk/                 # Shared types and utilities
-│   │   └── src/types/       # Manifest, Permissions, RPC, Tiles
-│   │
-│   └── sandbox/             # isolated-vm wrapper for secure execution
-│       └── src/             # SandboxService, SandboxInstance
-│
-├── plugins/                 # Reference plugins
-│   └── moderator/           # Example: Toxic comment detector
-│       ├── manifest.json
-│       ├── backend/index.js
-│       └── frontend/index.html
-│
-├── drizzle/                 # Database migrations
-└── docs/                    # Documentation & User Stories
-```
-
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -107,19 +46,176 @@ pnpm install
 # Build all packages
 pnpm build
 
-# Run tests
-pnpm test
+# Apply database migrations
+pnpm --filter host-backend db:migrate
 ```
 
-### Development
+> **⚠️ Important**: The database migrations must be run before starting the application for the first time.
+
+### Environment Configuration
+
+Copy the example environment files and customize as needed:
 
 ```bash
-# Start all apps in development mode
-pnpm dev
+# Backend configuration
+cp apps/host-backend/.env.example apps/host-backend/.env
 
-# Or start individually
-pnpm --filter host-backend dev    # Backend at http://localhost:3000
-pnpm --filter host-frontend dev   # Frontend at http://localhost:5173
+# Frontend configuration
+cp apps/host-frontend/.env.example apps/host-frontend/.env
+```
+
+**Backend (`apps/host-backend/.env`):**
+| Variable | Default | Description |
+| --------------- | ----------------------------- | -------------------------- |
+| `PORT` | `3000` | Backend server port |
+| `DATABASE_URL` | `./data/config.db` | SQLite database path |
+| `FRONTEND_URL` | `http://localhost:5173` | CORS allowed origin |
+
+**Frontend (`apps/host-frontend/.env`):**
+| Variable | Default | Description |
+| ------------------ | -------------------------- | -------------------------- |
+| `VITE_PORT` | `5173` | Frontend dev server port |
+| `VITE_BACKEND_URL` | `http://localhost:3000` | Backend API URL for proxy |
+
+### Running the Application
+
+```bash
+# Terminal 1: Start the Backend (NestJS)
+pnpm --filter host-backend dev
+
+# Terminal 2: Start the Frontend (React + Vite)
+pnpm --filter host-frontend dev
+```
+
+**Access the application:**
+
+- 🌐 **Frontend Dashboard**: http://localhost:5173
+- 🔧 **Backend API**: http://localhost:3000
+- 💓 **Health Check**: http://localhost:3000/health
+
+### Running Tests
+
+```bash
+# Run all tests
+pnpm test
+
+# Run tests with coverage
+pnpm test:cov
+
+# Run specific package tests
+pnpm --filter host-backend test
+pnpm --filter host-frontend test
+pnpm --filter @configent/sandbox test
+```
+
+### Database Migrations
+
+```bash
+# Generate new migrations after schema changes
+pnpm --filter host-backend db:generate
+
+# Apply pending migrations
+pnpm --filter host-backend db:migrate
+
+# Open Drizzle Studio (database UI)
+pnpm --filter host-backend db:studio
+```
+
+## 🧪 Testing the Plugins
+
+### The Moderator Plugin
+
+The Moderator plugin demonstrates the Scheduler API and MCP polling:
+
+1. Start the backend: `pnpm --filter host-backend dev`
+2. The plugin registers a cron job that fires every minute
+3. On each trigger, it calls `rpc.mcp.call('wordpress', 'get_comments')`
+4. Mock data returns 3 comments (1 toxic)
+5. Toxic comments trigger `rpc.notify.send('warn', ...)`
+
+**Expected logs:**
+
+```
+[Moderator] Received scheduler event: check-toxicity
+[Moderator] Polling MCP for new comments...
+[Moderator] Received 3 comments
+[Moderator] TOXIC comment detected from Bot: "BUY CRYPTO NOW!!!"
+RPC [notify.send] (warn): Toxic comment found from Bot!
+```
+
+### The Editor Plugin
+
+The Editor plugin demonstrates multi-MCP synthesis:
+
+1. Start the backend: `pnpm --filter host-backend dev`
+2. The plugin registers a cron job at 8:00 AM daily
+3. On trigger, it fetches:
+   - Journal entry from `rpc.store.get('journal_YYYY-MM-DD')`
+   - GitHub commits from `rpc.mcp.call('github', 'get_commits')`
+   - Web search results from `rpc.mcp.call('brave-search', 'search')`
+4. Synthesizes a Markdown "Daily Briefing"
+5. Saves to store and notifies user
+
+**Test manually by updating the cron to `* * * * *` (every minute) in the plugin code.**
+
+## 🏗️ Architecture
+
+Configent uses a **Micro-Kernel (Host/Plugin)** architecture:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         Host (Shell)                            │
+├──────────────────────────┬──────────────────────────────────────┤
+│   Frontend (React/Vite)  │      Backend (NestJS)                │
+│   ├── Grid UI Dashboard  │      ├── Vault (AES-256-GCM)         │
+│   ├── Plugin Tiles       │      ├── Sandbox (isolated-vm)       │
+│   └── Permission Modals  │      ├── Scheduler (node-cron)       │
+│                          │      ├── RPC Bridge                  │
+│                          │      └── SQLite (Drizzle ORM)        │
+└──────────────────────────┴──────────────────────────────────────┘
+                                    │
+                         ┌──────────┴──────────┐
+                         │   Plugin Runtime    │
+                         │   (V8 Isolates)     │
+                         │   ┌─────┐ ┌─────┐   │
+                         │   │Mod. │ │Edit.│   │
+                         │   └─────┘ └─────┘   │
+                         └─────────────────────┘
+```
+
+## 📁 Project Structure
+
+```
+configent/
+├── apps/
+│   ├── host-backend/        # NestJS - Core Shell Backend
+│   │   ├── src/modules/     # Feature modules (Hexagonal Architecture)
+│   │   │   ├── vault/       # Secret encryption service
+│   │   │   ├── plugins/     # Plugin lifecycle management
+│   │   │   └── scheduler/   # Cron job management
+│   │   └── drizzle/         # Database migrations
+│   │
+│   └── host-frontend/       # React + Vite - Dashboard UI
+│       └── src/
+│           ├── components/  # UI Components (Dashboard, PluginHost)
+│           └── features/    # Feature modules (PluginStore, PermissionModal)
+│
+├── packages/
+│   ├── sdk/                 # Shared types (Manifest, Permissions, RPC)
+│   └── sandbox/             # isolated-vm wrapper for secure execution
+│
+├── plugins/                 # Reference plugins
+│   ├── moderator/           # Toxic comment detector
+│   │   ├── manifest.json
+│   │   ├── backend/index.js
+│   │   └── frontend/index.html
+│   │
+│   └── editor/              # Journaling & Daily Briefing
+│       ├── manifest.json
+│       ├── backend/index.js
+│       └── frontend/index.html
+│
+└── docs/                    # Documentation & User Stories
 ```
 
 ## 📦 Packages
@@ -150,6 +246,8 @@ Configent follows **Zero Trust Plugins** principles:
 | `scheduler.register` | `schedule:register` | Register cron jobs         |
 | `notify.send`        | `ui:notify`         | Send UI notifications      |
 | `mcp.call`           | `mcp:call`          | Call MCP server methods    |
+| `store.get`          | `storage:read`      | Read from plugin storage   |
+| `store.set`          | `storage:write`     | Write to plugin storage    |
 
 ## 🛠️ Tech Stack
 
@@ -163,7 +261,7 @@ Configent follows **Zero Trust Plugins** principles:
 
 ## 📋 Roadmap
 
-### Phase 1: Trust & Standard (Current)
+### Phase 1: Trust & Standard ✅ Complete
 
 - [x] Monorepo scaffolding (US-101)
 - [x] SQLite + Drizzle migrations (US-102)
@@ -175,7 +273,8 @@ Configent follows **Zero Trust Plugins** principles:
 - [x] Permission Grant System (US-204)
 - [x] Scheduler API (US-301)
 - [x] Moderator Plugin Reference (US-302, US-303)
-- [ ] Host Frontend Dashboard (Epic 05)
+- [x] Editor Plugin Reference (US-401 - US-404)
+- [x] Host Frontend Dashboard (US-501 - US-504)
 
 ### Phase 2: Cloud & Convenience (Future)
 
