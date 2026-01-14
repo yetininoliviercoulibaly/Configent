@@ -45,7 +45,12 @@ pnpm install
 
 # Build all packages
 pnpm build
+
+# Apply database migrations
+pnpm --filter host-backend db:migrate
 ```
+
+> **⚠️ Important**: The database migrations must be run before starting the application for the first time.
 
 ### Environment Configuration
 
