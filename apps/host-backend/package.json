@@ -6,8 +6,8 @@
   "type": "commonjs",
   "scripts": {
     "build": "nest build",
-    "dev": "nest start --watch",
-    "start": "node dist/main.js",
+    "dev": "nest start --watch --entryFile apps/host-backend/src/main",
+    "start": "node dist/apps/host-backend/src/main.js",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "test": "jest",
